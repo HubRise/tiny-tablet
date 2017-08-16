@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HubRise Web Client</title>
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.2/css/foundation.css"/>-->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div id="app">
+  <label>
+    Code:
+    <input type="text" size="30" v-model="code"/>
+  </label>
+
+  <order v-for="order in orders" :order="order" :key="order.id"></order>
+</div>
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.2/js/foundation.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
