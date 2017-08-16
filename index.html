@@ -9,10 +9,12 @@
 <body>
 
 <div id="app">
-  <label>
-    Code:
-    <input type="text" size="30" v-model="code"/>
-  </label>
+  <div v-if="accessToken">
+    Connected!
+  </div>
+  <div v-else>
+    <a :href="authenticationPage">Connect to HubRise</a>
+  </div>
 
   <order v-for="order in orders" :order="order" :key="order.id"></order>
 </div>

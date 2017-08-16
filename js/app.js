@@ -1,5 +1,7 @@
-var authenticationServerUrl = 'http://localhost:4003/oauth2/v1/token';
+var baseAuthenticationPage = 'http://localhost:4003/oauth2/v1/authorize';
+var getTokenUrl = 'http://localhost:4003/oauth2/v1/token';
 var apiUrl = 'http://localhost:4000/v1';
+
 var clientId = '810615872081.clients.localhost';
 var clientSecret = '476e13958a1001aca6a57438949e361c459c917481af8ea474438c341acbc371';
 
@@ -7,38 +9,17 @@ new Vue({
   el: '#app',
 
   data: {
-    accessToken: '',
-
-    code: '',
-
-    orders: [
-      {
-        id: '1',
-        customer: {
-          first_name: 'Julien'
-        }
-      },
-      {
-        id: '2',
-        customer: {
-          first_name: 'Thomas'
-        }
-      }
-    ]
-  },
-
-  watch: {
-    code: function () {
-      if (this.code != '') this.getAccessToken();
-    },
+    accessToken: null,
+    authenticationPage: null,
+    orders: []
   },
 
   methods: {
-    getAccessToken: function () {
-      var vm = this
+    getAccessToken: function (code) {
+      var vm = this;
 
-      axios.post(authenticationServerUrl, {
-        code: this.code,
+      axios.post(getTokenUrl, {
+        code: code,
         client_id: clientId,
         client_secret: clientSecret,
       })
@@ -54,7 +35,7 @@ new Vue({
     },
 
     getOrders: function () {
-      var vm = this
+      var vm = this;
 
       axios.get(apiUrl + '/location/orders', {
         headers: {
@@ -70,6 +51,21 @@ new Vue({
             console.log("ERROR getOrders : " + error);
           });
     }
+  },
+
+  created: function () {
+    var vm = this;
+    window.location.search.substr(1).split('&').forEach(function (item) {
+      var tmp = item.split("=");
+      if (tmp[0] === 'code') {
+        var code = decodeURIComponent(tmp[1]);
+        vm.getAccessToken(code);
+      }
+    });
+
+    this.authenticationPage =
+        baseAuthenticationPage +
+        '?redirect_uri=' + window.location.href + '&client_id=' + clientId + '&scope=location[orders.read]';
   },
 
   components: {
