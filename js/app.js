@@ -140,6 +140,12 @@ new Vue({
         }
       }
     },
+
+    'orderPopup': {
+      template: '#order-popup-template',
+
+      props: ['order'],
+    }
   },
 })
 ;
