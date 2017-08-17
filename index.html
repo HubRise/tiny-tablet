@@ -9,56 +9,6 @@
 </head>
 <body>
 
-<script type="text/x-template" id="order-popup-template">
-  <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="order-popup">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            {{ order.customer.first_name }} {{ order.customer.last_name }}
-          </h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <div class="modal-body">
-          <table class="table table-striped">
-            <tbody>
-            <template v-for="item in order.items">
-              <tr>
-                <td>{{ item.product_name }}</td>
-                <td>{{ item.price }}</td>
-                <td>x {{ Math.floor(item.quantity) }}</td>
-              </tr>
-              <tr v-for="option in item.options" class="popup__table-option">
-                <td>{{ option.name }}</td>
-                <td>{{ option.price }}</td>
-                <td/>
-              </tr>
-            </template>
-            </tbody>
-          </table>
-
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="status">New status</label>
-              <select class="form-control" id="status">
-                <option>New</option>
-              </select>
-            </div>
-            <button class="btn btn-primary">Update</button>
-          </form>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</script>
-
 <div id="app" class="container">
   <div v-if="accessToken" class="logged-in">
     <h2 v-if="location">{{ location.account.name }} {{ location.name }}</h2>
@@ -87,7 +37,52 @@
     </div>
   </div>
 
-  <order-popup v-if="selectedOrder" :order="selectedOrder"/>
+  <div v-if="selectedOrder" class="modal fade" id="order-popup" tabindex="-1" role="dialog"
+       aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            {{ selectedOrder.customer.first_name }} {{ selectedOrder.customer.last_name }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <tbody>
+            <template v-for="item in selectedOrder.items">
+              <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.price }}</td>
+                <td>x {{ Math.floor(item.quantity) }}</td>
+              </tr>
+              <tr v-for="option in item.options" class="popup__table-option">
+                <td>{{ option.name }}</td>
+                <td>{{ option.price }}</td>
+                <td/>
+              </tr>
+            </template>
+            </tbody>
+          </table>
+
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="status">New status</label>
+              <select class="form-control" id="status">
+                <option>New</option>
+              </select>
+            </div>
+            <button class="btn btn-primary">Update</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div v-if="!accessToken" class="logged-out">
     <a :href="authenticationPage">Connect to HubRise</a>
