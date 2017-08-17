@@ -5,7 +5,7 @@ var apiUrl = 'http://localhost:4000/v1';
 var clientId = '810615872081.clients.localhost';
 var clientSecret = '476e13958a1001aca6a57438949e361c459c917481af8ea474438c341acbc371';
 
-var ordersPerGroup = 5;
+var nbOrders = 10;
 
 new Vue({
   el: '#app',
@@ -14,7 +14,9 @@ new Vue({
     accessToken: null,
     authenticationPage: null,
     user: null,
-    orders: []
+    location: null,
+    orders: [],
+    selectedOrder: null,
   },
 
   methods: {
@@ -27,7 +29,6 @@ new Vue({
         client_secret: clientSecret,
       })
           .then(function (response) {
-            console.log("SUCCESS fetchAccessToken : " + response.data);
             vm.setAccessToken(response.data.access_token);
           })
           .catch(function (error) {
@@ -40,12 +41,13 @@ new Vue({
       vm.accessToken = accessToken;
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
-        vm.fetchProfile();
+        vm.fetchUserAndLocation();
         vm.fetchOrders();
       } else {
         localStorage.removeItem('accessToken');
         vm.orders = [];
         vm.user = null;
+        vm.location = null;
       }
     },
 
@@ -53,17 +55,20 @@ new Vue({
       this.setAccessToken(null);
     },
 
-    fetchProfile: function () {
+    fetchUserAndLocation: function () {
       var vm = this;
       vm.apiRequest('/user', function (data) {
         vm.user = data;
+      });
+      vm.apiRequest('/location', function (data) {
+        vm.location = data;
       });
     },
 
     fetchOrders: function () {
       var vm = this;
       vm.apiRequest('/location/orders', function (data) {
-        vm.orders = data;
+        vm.orders = data.reverse().splice(0, nbOrders);
       });
     },
 
@@ -87,8 +92,9 @@ new Vue({
           });
     },
 
-    ordersGroup: function (group) {
-      return this.orders.slice((group - 1) * ordersPerGroup, group * ordersPerGroup);
+    openPopup: function (order) {
+      this.selectedOrder = order;
+      $('#order-popup').modal({})
     },
   },
 
@@ -114,22 +120,26 @@ new Vue({
   },
 
   components: {
-    'order':
-        {
-          template: '<div class="card order"><div class="card-body"><h4 class="card-title">{{ order.id }}</h4><div class="card-text"><b>{{ order.status}}</b> {{order.total}}</div></div></div>',
+    'orderRow': {
+      template: '<tr @click="$emit(\'popup\', order)"><td>{{ time_s(order.created_at) }}</td><td>{{ order.id }}</td><td v-html="statusBadge"></td><td>{{order.total}}</td></tr>',
 
-          props:
-              ['order'],
+      props: ['order'],
+
+      methods: {
+        time_s: function (s) {
+          var d = new Date(Date.parse(s));
+          return d.toLocaleDateString() + " " + d.toLocaleTimeString();
         }
-  },
+      },
 
-  computed: {
-    numberOfGroups: function () {
-      return this.orders.length >= 1 ?
-          Math.floor(this.orders.length - 1 / ordersPerGroup) :
-          0;
+      computed: {
+        statusBadge: function () {
+          var status = this.order.status,
+              statusClass = {new: 'badge-secondary'}[status] || 'badge-light';
+          return '<span class="badge ' + statusClass + '">' + status + '</span>';
+        }
+      }
     },
-
-  }
+  },
 })
 ;

@@ -10,18 +10,81 @@
 <body>
 
 <div id="app" class="container">
-  <div v-if="accessToken">
+  <div v-if="accessToken" class="logged-in">
+    <h2 v-if="location">{{ location.account.name }} {{ location.name }}</h2>
+
     <div class="profile" v-if="user">
-      Hi {{ user.first_name }}!
+      Logged in as {{ user.first_name }}
       <a href='#' @click="logout">(logout)</a>
     </div>
 
-    <div class="card-group" v-for="group in numberOfGroups">
-      <order v-for="order in ordersGroup(group)" :order="order" :key="order.id"></order>
+    <table class="table table-hover orders">
+      <thead>
+      <tr>
+        <th>time</th>
+        <th>id</th>
+        <th>status</th>
+        <th>total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr is="order-row" v-for="order in orders" :order="order" :key="order.id" @popup="openPopup"/>
+      </tbody>
+    </table>
+
+    <div class="refresh">
+      <a href="#" @click="fetchOrders">Refresh</a>
     </div>
   </div>
 
-  <div v-if="!accessToken" class="signin">
+  <div v-if="selectedOrder" class="modal fade" id="order-popup" tabindex="-1" role="dialog"
+       aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            {{ selectedOrder.customer.first_name }} {{ selectedOrder.customer.last_name }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-striped">
+            <tbody>
+            <template v-for="item in selectedOrder.items">
+              <tr>
+                <td>{{ item.product_name }}</td>
+                <td>{{ item.price }}</td>
+                <td>x {{ Math.floor(item.quantity) }}</td>
+              </tr>
+              <tr v-for="option in item.options" class="popup__table-option">
+                <td>{{ option.name }}</td>
+                <td>{{ option.price }}</td>
+                <td/>
+              </tr>
+            </template>
+            </tbody>
+          </table>
+
+          <form class="form-inline">
+            <div class="form-group">
+              <label for="status">New status</label>
+              <select class="form-control" id="status">
+                <option>New</option>
+              </select>
+            </div>
+            <button class="btn btn-primary">Update</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="!accessToken" class="logged-out">
     <a :href="authenticationPage">Connect to HubRise</a>
   </div>
 </div>
@@ -31,7 +94,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
 
 <script src="js/app.js"></script>
 
