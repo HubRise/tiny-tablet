@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>HubRise Web Client</title>
-  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.2/css/foundation.css"/>-->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 
-<div id="app">
+<div id="app" class="container">
   <div v-if="accessToken">
-    Connected!
+    <div class="profile" v-if="user">
+      Hi {{ user.first_name }}!
+      <a href='#' @click="logout">(logout)</a>
+    </div>
+
+    <div class="card-group" v-for="group in numberOfGroups">
+      <order v-for="order in ordersGroup(group)" :order="order" :key="order.id"></order>
+    </div>
   </div>
-  <div v-else>
+
+  <div v-if="!accessToken" class="signin">
     <a :href="authenticationPage">Connect to HubRise</a>
   </div>
-
-  <order v-for="order in orders" :order="order" :key="order.id"></order>
 </div>
 
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.2/js/foundation.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.js"></script>
+
 <script src="js/app.js"></script>
 
 </body>

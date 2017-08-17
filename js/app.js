@@ -5,17 +5,20 @@ var apiUrl = 'http://localhost:4000/v1';
 var clientId = '810615872081.clients.localhost';
 var clientSecret = '476e13958a1001aca6a57438949e361c459c917481af8ea474438c341acbc371';
 
+var ordersPerGroup = 5;
+
 new Vue({
   el: '#app',
 
   data: {
     accessToken: null,
     authenticationPage: null,
+    user: null,
     orders: []
   },
 
   methods: {
-    getAccessToken: function (code) {
+    fetchAccessToken: function (code) {
       var vm = this;
 
       axios.post(getTokenUrl, {
@@ -24,55 +27,109 @@ new Vue({
         client_secret: clientSecret,
       })
           .then(function (response) {
-            console.log("SUCCESS getAccessToken : " + response.data);
-            console.log("response.data.access_token = " + response.data.access_token);
-            vm.accessToken = response.data.access_token;
-            vm.getOrders();
+            console.log("SUCCESS fetchAccessToken : " + response.data);
+            vm.setAccessToken(response.data.access_token);
           })
           .catch(function (error) {
-            console.log("ERROR getAccessToken : " + error);
+            console.log("ERROR fetchAccessToken : " + error);
           });
     },
 
-    getOrders: function () {
+    setAccessToken: function (accessToken) {
       var vm = this;
+      vm.accessToken = accessToken;
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken);
+        vm.fetchProfile();
+        vm.fetchOrders();
+      } else {
+        localStorage.removeItem('accessToken');
+        vm.orders = [];
+        vm.user = null;
+      }
+    },
 
-      axios.get(apiUrl + '/location/orders', {
+    logout: function () {
+      this.setAccessToken(null);
+    },
+
+    fetchProfile: function () {
+      var vm = this;
+      vm.apiRequest('/user', function (data) {
+        vm.user = data;
+      });
+    },
+
+    fetchOrders: function () {
+      var vm = this;
+      vm.apiRequest('/location/orders', function (data) {
+        vm.orders = data;
+      });
+    },
+
+    apiRequest: function (endpoint, successCallback) {
+      var vm = this;
+      if (!vm.accessToken) return;
+
+      axios.get(apiUrl + endpoint, {
         headers: {
-          'X-Access-Token': this.accessToken,
+          'X-Access-Token': vm.accessToken,
           'Content-Type': 'application/json'
         }
       })
           .then(function (response) {
-            console.log("SUCCESS getOrders : " + response.data);
-            vm.orders = response.data;
+            successCallback(response.data);
           })
           .catch(function (error) {
-            console.log("ERROR getOrders : " + error);
+            console.log("ERROR " + endpoint + ": " + error);
+            alert("Problem! Please login again or check console for more details.");
+            vm.logout();
           });
-    }
+    },
+
+    ordersGroup: function (group) {
+      return this.orders.slice((group - 1) * ordersPerGroup, group * ordersPerGroup);
+    },
   },
 
   created: function () {
-    var vm = this;
-    window.location.search.substr(1).split('&').forEach(function (item) {
-      var tmp = item.split("=");
-      if (tmp[0] === 'code') {
-        var code = decodeURIComponent(tmp[1]);
-        vm.getAccessToken(code);
-      }
-    });
+    var vm = this,
+        storedAccessToken = localStorage.getItem('accessToken');
+
+    if (storedAccessToken) {
+      vm.setAccessToken(storedAccessToken)
+    } else {
+      window.location.search.substr(1).split('&').forEach(function (item) {
+        var tmp = item.split("=");
+        if (tmp[0] === 'code') {
+          var code = decodeURIComponent(tmp[1]);
+          vm.fetchAccessToken(code);
+        }
+      });
+    }
 
     this.authenticationPage =
         baseAuthenticationPage +
-        '?redirect_uri=' + window.location.href + '&client_id=' + clientId + '&scope=location[orders.read]';
+        '?redirect_uri=' + window.location.href + '&client_id=' + clientId + '&scope=location[orders.read],profile';
   },
 
   components: {
-    'order': {
-      template: '<div>{{ order.id }} <b>{{ order.status}}</b> {{order.total}} </div>',
+    'order':
+        {
+          template: '<div class="card order"><div class="card-body"><h4 class="card-title">{{ order.id }}</h4><div class="card-text"><b>{{ order.status}}</b> {{order.total}}</div></div></div>',
 
-      props: ['order'],
-    }
+          props:
+              ['order'],
+        }
+  },
+
+  computed: {
+    numberOfGroups: function () {
+      return this.orders.length >= 1 ?
+          Math.floor(this.orders.length - 1 / ordersPerGroup) :
+          0;
+    },
+
   }
-});
+})
+;
