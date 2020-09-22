@@ -60,11 +60,9 @@ Windows:
 
 ## Additional resources
 
-The HubRise documentation provides you additional information to get you started and make this app production ready. 
+The HubRise documentation provides you additional information to connect your app to HubRise.
 
-To learn more about the HubRise platform, see our [User guide](https://www.hubrise.com/docs/).
-
-To learn how to connect your solution to HubRise, try our [Quick start guide](https://www.hubrise.com/developers/quick-start).
+Try our [Quick start guide](https://www.hubrise.com/developers/quick-start) to get you started.
 
 For more information about the HubRise API, see our [API reference](https://www.hubrise.com/developers/api/general-concepts).
 
