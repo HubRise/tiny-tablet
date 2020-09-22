@@ -30,6 +30,47 @@ Clicking on one of the logs reveals additional information about the order, such
 
 ![Modal with additional information about the order](./screenshots/single-order-modal.png)
 
+### Sending orders to HubRise (optional)
+
+If you want to send new orders to HubRise, you need a separate app. You can find the detailed steps of how to set up a new app in the [Quick start guide](https://www.hubrise.com/developers/quick-start).
+
+Alternatively, if you want to quickly send an order to HubRise, follow these steps.
+
+1. Copy and paste in your browser the following url: `https://manager.hubrise.com/oauth2/v1/authorize?redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=910639589600.clients.hubrise.com&scope=location[orders.write,customer_list.write,catalog.read]`
+1. **Allow** the app to access your location.
+1. Copy the authorisation code. 
+1. Substitute your authorisation code and send the following request from the command line:
+   ```
+   curl -X POST 'https://manager.hubrise.com/oauth2/v1/token?code=YOUR_AUTHORISATION_CODE&client_id=910639589600.clients.hubrise.com&client_secret=15336ea38512c92bab50e519ee29818875430301a9f21adb0525b3d01944648f'
+   ```
+1. You should obtain a JSON object that looks like this:
+   ```
+   {"access_token":"qwerty1234567890","account_id":"wbv7z","location_id":"wbv7z-0","catalog_id":"wj9rj","customer_list_id":"wx77p"}
+   ```
+   Copy the access token.
+1. Substitute your access token and send the following request from the command line:
+   ```
+   curl -H 'X-Access-Token: YOUR_ACCESS_TOKEN' \
+   -H 'Content-Type: application/json' \
+   -X POST 'https://api.hubrise.com/v1/location/orders' \
+   -d '{
+     "status": "new",
+     "customer": {
+       "first_name": "Julie",
+       "last_name": "Brown"
+     },
+     "total": "11.90 EUR",
+     "items": [
+       {
+         "price": "11.90 EUR",
+         "quantity": 1,
+         "subtotal": "11.90 EUR",
+         "product_name": "Pizza"
+       }
+     ]
+   }'
+   ```
+1. Refresh the TinyTablet page and you should see the new order.
 
 ## What this app is NOT
 
