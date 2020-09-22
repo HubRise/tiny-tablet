@@ -1,11 +1,13 @@
 <a href="https://www.hubrise.com/"><img src="./screenshots/hubrise-logo.png" align="left" height="48"></a>
 <br><br><br>
 
-# HubRise {{app_name}} Template
+# HubRise TinyTablet
 
-{{app_name}} is an app that prints new orders received by your HubRise location, with just a few lines of code.
+TinyTablet is an app that prints the orders received by your HubRise location. 
 
-You can fork this repository and make changes to the code to create your own app. 
+It is a minimalistic app that achieves its goal in less than 250 lines of code (including the HTML)!
+
+You can use this code as a guide when you implement your own solution for HubRise, or you fork this repository and make changes to create your own app. 
 
 
 ## Try the app
@@ -40,31 +42,29 @@ This is bad coding practice.
 
 Also, the user interface is too crude to be used in a real case scenario. 
 
-## Prerequisites
+## Running TinyTablet locally
 
-...
+Running TinyTablet locally requires [Node.js](https://nodejs.org/en/download/) installed on your machine. 
 
-## Running {{app_name}} locally
-
-To run {{app_name}} locally, follow these steps:
-
-Linux and macOS:
+From the project's folder, run:
 ```
-<run_command>
+sudo npm install -g serve
+serve
 ```
 
-Windows:
+Alternatively, if you use [yarn](https://yarnpkg.com/) as package manager, run:
 ```
-<run_command>
+sudo yarn global add serve
+serve
 ```
+
+TinyTablet should now be running on your machine: simply open your browser and navigate to `http://localhost:5000`.
 
 ## Additional resources
 
-The HubRise documentation provides you additional information to connect your app to HubRise.
+The HubRise documentation provides additional information to connect your app to HubRise.
 
-Try our [Quick start guide](https://www.hubrise.com/developers/quick-start) to get you started.
-
-For more information about the HubRise API, see our [API reference](https://www.hubrise.com/developers/api/general-concepts).
+You can try our [Quick start guide](https://www.hubrise.com/developers/quick-start), or see our [API reference](https://www.hubrise.com/developers/api/general-concepts) for more details about the HubRise API.
 
 ## Contact
 
@@ -72,4 +72,4 @@ If you need help or want to integrate your solution with HubRise, contact us at 
 
 ## License
 
-This app and the relative code are released under the [<license_name>](<link>). 
+This app and the relative code are released under the MIT License. 
