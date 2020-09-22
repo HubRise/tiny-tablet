@@ -5,7 +5,7 @@
 
 TinyTablet is an app that prints the orders received by your HubRise location. 
 
-It is a minimalistic app that achieves its goal in less than 250 lines of code (including the HTML)!
+It is a minimalistic browser-based app, that achieves its goal in less than 250 lines of code including the HTML!
 
 You can use this code as a guide when you implement your own solution for HubRise, or you fork this repository and make changes to create your own app. 
 
@@ -82,7 +82,9 @@ Also, the user interface is too crude to be used in a real case scenario.
 
 ## Running TinyTablet locally
 
-Running TinyTablet locally requires [Node.js](https://nodejs.org/en/download/) installed on your machine. 
+TinyTablet is a Web app with no server code. To run it locally, you just need a static file server.
+
+If you have [Node.js](https://nodejs.org/en/download/) installed on your machine, you can use `serve` for this purpose.
 
 From the project's folder, run:
 ```
@@ -90,13 +92,7 @@ sudo npm install -g serve
 serve
 ```
 
-Alternatively, if you use [yarn](https://yarnpkg.com/) as package manager, run:
-```
-sudo yarn global add serve
-serve
-```
-
-TinyTablet should now be running on your machine: simply open your browser and navigate to `http://localhost:5000`.
+Then open your browser and navigate to `http://localhost:5000`.
 
 ## Additional resources
 
