@@ -1,11 +1,3 @@
-// LocalHost settings
-// var baseAuthenticationPage = 'http://localhost:4003/oauth2/v1/authorize';
-// var getTokenUrl = 'http://localhost:4003/oauth2/v1/token';
-// var apiUrl = 'http://localhost:4000/v1';
-// var clientId = '810615872081.clients.localhost';
-// var clientSecret = '476e13958a1001aca6a57438949e361c459c917481af8ea474438c341acbc371';
-
-// Prod settings
 var baseAuthenticationPage = 'https://manager.hubrise.com/oauth2/v1/authorize';
 var getTokenUrl = 'https://manager.hubrise.com/oauth2/v1/token';
 var apiUrl = 'https://api.hubrise.com/v1';
