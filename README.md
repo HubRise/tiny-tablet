@@ -9,7 +9,6 @@ It is a minimalistic app that achieves its goal in less than 250 lines of code (
 
 You can use this code as a guide when you implement your own solution for HubRise, or you fork this repository and make changes to create your own app. 
 
-
 ## Try the app
 
 First, you need to [create a HubRise account](https://manager.hubrise.com/signup). It's free and it only takes a minute. 
@@ -36,7 +35,7 @@ If you want to send new orders to HubRise, you need a separate app. You can find
 
 Alternatively, if you want to quickly send an order to HubRise, follow these steps.
 
-1. Copy and paste in your browser the following url: `https://manager.hubrise.com/oauth2/v1/authorize?redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=910639589600.clients.hubrise.com&scope=location[orders.write,customer_list.write,catalog.read]`
+1. Copy and paste in your browser the following url: `https://manager.hubrise.com/oauth2/v1/authorize?redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=910639589600.clients.hubrise.com&scope=location[orders.write]`
 1. **Allow** the app to access your location.
 1. Copy the authorisation code. 
 1. Substitute your authorisation code and send the following request from the command line:
@@ -48,7 +47,7 @@ Alternatively, if you want to quickly send an order to HubRise, follow these ste
    {"access_token":"qwerty1234567890","account_id":"wbv7z","location_id":"wbv7z-0","catalog_id":"wj9rj","customer_list_id":"wx77p"}
    ```
    Copy the access token.
-1. Substitute your access token and send the following request from the command line:
+1. Substitute your access token, replace `EUR` with your location's currency if needed, and send the following request from the command line:
    ```
    curl -H 'X-Access-Token: YOUR_ACCESS_TOKEN' \
    -H 'Content-Type: application/json' \
@@ -59,18 +58,16 @@ Alternatively, if you want to quickly send an order to HubRise, follow these ste
        "first_name": "Julie",
        "last_name": "Brown"
      },
-     "total": "11.90 EUR",
      "items": [
        {
-         "price": "11.90 EUR",
-         "quantity": 1,
-         "subtotal": "11.90 EUR",
          "product_name": "Pizza"
+         "quantity": "1",
+         "price": "11.90 EUR",
        }
      ]
    }'
    ```
-1. Refresh the TinyTablet page and you should see the new order.
+1. Click "Refresh" on the TinyTablet page and you should see the new order.
 
 ## What this app is NOT
 
@@ -113,4 +110,4 @@ If you need help or want to integrate your solution with HubRise, contact us at 
 
 ## License
 
-This app and the relative code are released under the MIT License. 
+This app and the relative code are released under the MIT License.
