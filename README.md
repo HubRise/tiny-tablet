@@ -3,11 +3,13 @@
 
 # HubRise TinyTablet
 
-TinyTablet is an app that prints the orders received by your HubRise location. 
+TinyTablet is a minimalistic browser-based app, that shows how you can write an app connected to Deliveroo, Uber Eats, and dozens of other apps, in a few lines of code.
 
-It is a minimalistic browser-based app, that achieves its goal in less than 250 lines of code including the HTML!
+TinyTablet first asks you to connect to HubRise, then it displays the latest orders received by your HubRise location, including order details.
 
-You can use this code as a guide when you implement your own solution for HubRise, or you fork this repository and make changes to create your own app. 
+All the code is in `index.html` and `js/app.js`, which amount to less than 250 lines, including the HTML and the code of the HubRise integration!
+
+Feel free to use this code as a guide when you implement your own solution for HubRise, or to fork this repository and improve the app, just for fun.
 
 ## Try the app
 
