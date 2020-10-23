@@ -1,7 +1,7 @@
 <a href="https://www.hubrise.com/"><img src="./screenshots/hubrise-logo.png" align="left" height="48"></a>
 <br><br><br>
 
-[Try it now](http://philatist-fish-74534.netlify.com) or read instructions below.
+[Try the app now](http://tiny-tablet.hubrise-apps.com) or read instructions below.
 
 # HubRise TinyTablet
 
@@ -17,7 +17,7 @@ Feel free to use this code as a guide when you implement your own solution for H
 
 First, you need to [create a HubRise account](https://manager.hubrise.com/signup). It's free and it only takes a minute. 
 
-Then, simply [open the app](http://philatist-fish-74534.netlify.com) in your browser. 
+Then, simply [open the app](http://tiny-tablet.hubrise-apps.com) in your browser. 
 
 You will be asked to connect the app to your HubRise account. 
 Granting permissions is a necessary step in every OAuth2.0 authentication process, and requires the user to manually **Allow** the app access. 
