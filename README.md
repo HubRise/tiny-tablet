@@ -1,6 +1,8 @@
 <a href="https://www.hubrise.com/"><img src="./screenshots/hubrise-logo.png" align="left" height="48"></a>
 <br><br><br>
 
+[Try it now](http://philatist-fish-74534.netlify.com) or read instructions below.
+
 # HubRise TinyTablet
 
 TinyTablet is a minimalistic browser-based app, that shows how you can write an app connected to Deliveroo, Uber Eats, and dozens of other apps, in a few lines of code.
