@@ -9,7 +9,7 @@ TinyTablet is a minimalistic browser-based app, that shows how you can write an 
 
 TinyTablet first asks you to connect to HubRise, then it displays the latest orders received by your HubRise location, including order details.
 
-All the code is in `index.html` and `js/app.js`, which amount to less than 250 lines, including the HTML and the code of the HubRise integration!
+All the code is in `index.html` and `js/app.js`, which amount to less than 250 lines, including the HTML and the code of the HubRise integration! There is no server code.
 
 Feel free to use this code as a guide when you implement your own solution for HubRise, or to fork this repository and improve the app, just for fun.
 
