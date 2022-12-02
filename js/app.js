@@ -1,17 +1,13 @@
-var baseAuthenticationPage = 'https://manager.hubrise.com/oauth2/v1/authorize';
-var getTokenUrl = 'https://manager.hubrise.com/oauth2/v1/token';
-var apiUrl = 'https://api.hubrise.com/v1';
-var clientId = '987574477233.clients.hubrise.com';
-var clientSecret = '7769c2e42b7b7200780f47de4888008bdb5b751b5336d1631d8606cef0ef5a90';
-
-var nbOrders = 10;
+const apiUrl = 'https://api.hubrise.com/v1';
+const nbOrders = 10;
 
 new Vue({
   el: '#app',
 
   data: {
     accessToken: null,
-    authenticationPage: null,
+    inputAuthCode: null,
+    inputAccessToken: null,
     user: null,
     location: null,
     orders: [],
@@ -19,103 +15,69 @@ new Vue({
   },
 
   methods: {
-    fetchAccessToken: function (code) {
-      var vm = this;
-
-      axios.post(getTokenUrl, {
-        code: code,
-        client_id: clientId,
-        client_secret: clientSecret,
-      })
-          .then(function (response) {
-            vm.setAccessToken(response.data.access_token);
-          })
-          .catch(function (error) {
-            console.log("ERROR fetchAccessToken : " + error);
-          });
+    async submitToken(event) {
+      event.preventDefault();
+      await this.login(this.inputAccessToken);
+      this.inputAccessToken = null;
     },
 
-    setAccessToken: function (accessToken) {
-      var vm = this;
-      vm.accessToken = accessToken;
-      if (accessToken) {
-        localStorage.setItem('accessToken', accessToken);
-        vm.fetchUserAndLocation();
-        vm.fetchOrders();
-      } else {
-        localStorage.removeItem('accessToken');
-        vm.orders = [];
-        vm.user = null;
-        vm.location = null;
+    async login(accessToken) {
+      this.accessToken = accessToken;
+      localStorage.setItem('accessToken', accessToken);
+
+      try {
+        await this.fetchUserAndLocation();
+        await this.fetchOrders();
+      } catch (error) {
+        alert("Your access token seems to be invalid. Try to login again.");
       }
     },
 
-    logout: function () {
-      this.setAccessToken(null);
+    logout() {
+      this.accessToken = null
+      localStorage.removeItem('accessToken');
+
+      this.orders = [];
+      this.user = null;
+      this.location = null;
     },
 
-    fetchUserAndLocation: function () {
-      var vm = this;
-      vm.apiRequest('/user', function (data) {
-        vm.user = data;
-      });
-      vm.apiRequest('/location', function (data) {
-        vm.location = data;
-      });
+    async fetchUserAndLocation() {
+      const vm = this;
+      await this.apiRequest('/user', (data) => vm.user = data)
+      await this.apiRequest('/location', (data) => vm.location = data)
     },
 
-    fetchOrders: function () {
-      var vm = this;
-      vm.apiRequest('/location/orders', function (data) {
-        vm.orders = data.reverse().splice(0, nbOrders);
-      });
+    async fetchOrders() {
+      const vm = this;
+      await this.apiRequest('/location/orders', (data) =>  vm.orders = data.reverse().splice(0, nbOrders))
     },
 
-    apiRequest: function (endpoint, successCallback) {
-      var vm = this;
-      if (!vm.accessToken) return;
-
-      axios.get(apiUrl + endpoint, {
-        headers: {
-          'X-Access-Token': vm.accessToken,
-          'Content-Type': 'application/json'
-        }
-      })
-          .then(function (response) {
-            successCallback(response.data);
-          })
-          .catch(function (error) {
-            console.log("ERROR " + endpoint + ": " + error);
-            alert("Problem! Please login again or check console for more details.");
-            vm.logout();
-          });
+    async apiRequest(endpoint, onSuccess) {
+      try {
+        const response = await axios.get(apiUrl + endpoint, {
+          headers: {
+            'X-Access-Token': this.accessToken,
+            'Content-Type': 'application/json'
+          }
+        })
+        onSuccess(response.data);
+      } catch(error) {
+        this.logout();
+        console.log("ERROR " + endpoint + ": " + error);
+        throw error;
+      }
     },
 
-    openPopup: function (order) {
+    openPopup(order) {
       this.selectedOrder = order;
       $('#order-popup').modal({})
     },
   },
 
-  created: function () {
-    var vm = this,
-        storedAccessToken = localStorage.getItem('accessToken');
-
-    if (storedAccessToken) {
-      vm.setAccessToken(storedAccessToken)
-    } else {
-      window.location.search.substr(1).split('&').forEach(function (item) {
-        var tmp = item.split("=");
-        if (tmp[0] === 'code') {
-          var code = decodeURIComponent(tmp[1]);
-          vm.fetchAccessToken(code);
-        }
-      });
-    }
-
-    this.authenticationPage =
-        baseAuthenticationPage +
-        '?redirect_uri=' + window.location.href + '&client_id=' + clientId + '&scope=location[orders.read],profile';
+  async created() {
+    const storedAccessToken = localStorage.getItem('accessToken');
+    if (storedAccessToken) await this.login(storedAccessToken);
   },
 
   components: {
@@ -125,20 +87,19 @@ new Vue({
       props: ['order'],
 
       methods: {
-        time_s: function (s) {
-          var d = new Date(Date.parse(s));
+        time_s(s) {
+          const d = new Date(Date.parse(s));
           return d.toLocaleDateString() + " " + d.toLocaleTimeString();
         }
       },
 
       computed: {
-        statusBadge: function () {
-          var status = this.order.status,
-              statusClass = {new: 'badge-secondary'}[status] || 'badge-light';
+        statusBadge() {
+          const status = this.order.status,
+                statusClass = {new: 'badge-secondary'}[status] || 'badge-light';
           return '<span class="badge ' + statusClass + '">' + status + '</span>';
         }
       }
     },
   },
-})
-;
+});

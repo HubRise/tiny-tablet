@@ -1,26 +1,38 @@
-.logged-out {
-    max-width: 10rem;
-    text-align: center;
-    margin: 10rem auto;
+.layout {
+    max-width: 40rem;
+    margin: 2rem auto;
 }
 
-.logged-in {
-    max-width: 30rem;
-    margin: 0 auto;
+.layout .title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
 }
 
-.logged-in h2 {
+.layout .info {
     text-align: center;
-    margin-top: 2rem;
+    font-size: 1rem;
+    margin-bottom: 4rem;
 }
 
-.logged-in .profile {
-    text-align: center;
+.connection-steps li {
+    margin-bottom: 1rem;
+}
+
+.connection-steps pre {
+    background: #f5f5f5;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    margin: 0.5rem 0;
+}
+
+.connection-details {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
 }
 
 .orders {
-    width: 30rem;
-    margin: 5rem auto;
 }
 
 .orders tr:hover {

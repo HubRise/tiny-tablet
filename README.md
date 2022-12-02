@@ -75,14 +75,9 @@ Alternatively, if you want to quickly send an order to HubRise, follow these ste
 
 ## What this app is NOT
 
-This app is not production ready! 
-Consider it some boilerplate code that you can buil upon to create your own app.
-It is also useful to show some of the things you should _not_ do in your app! 
+This app is not production ready! It is intended to be used by developers for educational purposes.
 
-For example, in the first line of the `js/app.js` file, you will find the client secret. 
-This is bad coding practice. 
-
-Also, the user interface is too crude to be used in a real case scenario. 
+This app includes certain practices that should not be used in production environments. For example, the client secret is published in the client code, which is a security risk. In a production environment, you would create access tokens from your server to protect your client secret.
 
 ## Running TinyTablet locally
 

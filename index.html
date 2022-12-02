@@ -9,13 +9,19 @@
 </head>
 <body>
 
-<div id="app" class="container">
-  <div v-if="accessToken" class="logged-in">
-    <h2 v-if="location">{{ location.account.name }} {{ location.name }}</h2>
+<div id="app" class="layout">
+  <div class="title">TinyTablet</div>
+  <div class="info">A simple app to display your HubRise orders</div>
 
-    <div class="profile" v-if="user">
-      Logged in as {{ user.first_name }}
-      <a href='#' @click="logout">(logout)</a>
+  <div v-if="accessToken" class="logged-in">
+    <div class="connection-details">
+      <span v-if="location">
+        {{ location.account.name }} {{ location.name }}
+      </span>
+      <span v-if="user">
+        Logged in as {{ user.first_name }} {{ user.last_name }}
+        <a href='#' @click="logout">(logout)</a>
+      </span>
     </div>
 
     <table class="table table-hover orders">
@@ -75,8 +81,25 @@
     </div>
   </div>
 
-  <div v-if="!accessToken" class="logged-out">
-    <a :href="authenticationPage">Connect to HubRise</a>
+  <div v-if="!accessToken">
+    <ol class="connection-steps">
+      <li><a :href="`https://manager.hubrise.com/oauth2/v1/authorize?redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=987574477233.clients.hubrise.com&scope=location[orders.read],profile`" target="_blank">Connect to HubRise</a> to get an authorization code.</li>
+      <li>Enter your authorization code here: <input type="text" v-model="inputAuthCode"/></li>
+      <li>Run this command in a terminal:
+        <pre>
+CLIENT_ID=987574477233.clients.hubrise.com
+CLIENT_SECRET=7769c2e42b7b7200780f47de4888008bdb5b751b5336d1631d8606cef0ef5a90
+CODE=<b>{{ inputAuthCode }}</b>
+
+curl -X POST -d "client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&code=$CODE" \
+  https://manager.hubrise.com/oauth2/v1/token</pre>
+        This will return a JSON object with an access token.
+      </li>
+      <li>Copy the access token and paste it here:
+        <input type="text" v-model="inputAccessToken"/>
+        <button @click="submitToken">Go</button>
+      </li>
+    </ol>
   </div>
 </div>
 
