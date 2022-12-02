@@ -18,6 +18,7 @@ new Vue({
     async submitToken(event) {
       event.preventDefault();
       await this.login(this.inputAccessToken);
+      this.inputAuthCode = null;
       this.inputAccessToken = null;
     },
 
