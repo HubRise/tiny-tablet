@@ -19,8 +19,9 @@ First, you need to [create a HubRise account](https://manager.hubrise.com/signup
 
 Then, simply [open the app](https://tiny-tablet.hubrise-apps.com) in your browser. 
 
-You will be asked to connect the app to your HubRise account. 
-Granting permissions is a necessary step in every OAuth2.0 authentication process, and requires the user to manually **Allow** the app access. 
+You will be asked to connect the app to your HubRise account. Granting permissions is a necessary step in every OAuth2.0 authentication process, and requires the user to manually **Allow** the app access.
+
+As this is a demo app with no server side code, you will also need to run a command in a terminal with `curl` installed to create your access token. In a real app, this would not be needed, as the token would be created automatically by the server. 
 
 ![OAuth page granting access to the app](./screenshots/oauth-page.png)
 
